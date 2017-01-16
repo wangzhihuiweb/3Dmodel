@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="normalize.css" type="text/css" />
+		<script src="js/three.js"></script>
+		<script src="js/DDSLoader.js"></script>
+		<script src="js/OrbitControls.js"></script>
+		<script src="js/MTLLoader.js"></script>
+		<script src="js/OBJLoader.js"></script>
+		<script src="js/Detector.js"></script>
+		<style type="text/css">
+			.Model3D {
+				width: 268px;
+				height: 412px;
+				background: #333333;
+				margin: 5% auto auto auto;
+			}
+			
+			.Model3D .Modeloper {
+				height: 38px;
+				padding-right: 10px;
+				clear: both;
+				background: #3d3d3d;
+			}
+			
+			.Model3D .Modeloper h3 {
+				line-height: 38px;
+				float: left;
+				padding-left: 35px;
+				color: #eeeeee;
+				font-size: 16px;
+			}
+			
+			.Model3D .Modeloper b {
+				float: right;
+				width: 20px;
+				margin-right: 10px;
+				margin-top: 10px;
+				height: 20px;
+				display: block;
+			}
+			
+			.Model3D .Modeloper b img {
+				width: 20px;
+				cursor: pointer;
+				height: 20px;
+				display: block;
+			}
+			
+			.Model3D .Modelbox {
+				width: 268px;
+				height: 374px;
+				background: url(images/Modelbox.png) no-repeat;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="Model3D">
+			<div class="Modeloper">
+				<h3>湿地湿香</h3>
+				<b class="Homing"><img src="images/Homing.png" alt="归位"/></b>
+				<b class="narrow"><img src="images/narrow.png" alt="放大"/></b>
+				<b class="enlarge"><img src="images/enlarge.png" alt="缩小"/></b>
+			</div>
+			<div class="Modelbox" id="Modelbox" style="width: 268px; height:374px;">
+
+			</div>
+		</div>
+		<script>
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+			var container, stats, controls;
+			var camera, scene, renderer, light;
+
+			var clock = new THREE.Clock();
+
+//			var mixers = [];
+
+			init();
+
+			function init() {
+
+				var canvasWidth = 268;
+//				alert(canvasWidth)
+				var canvasHeight = 374;
+//				alert(canvasHeight)
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+				document.getElementById("Modelbox").appendChild(container)
+				camera = new THREE.PerspectiveCamera( 45, canvasWidth / canvasHeight, 1, 2000 );
+
+				scene = new THREE.Scene();
+			THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );	
+		 var mtlLoader = new THREE.MTLLoader();
+//		 mtlLoader.setBaseUrl( '' );//设置材质路径
+		 mtlLoader.setPath( 'moxing/' );//设置mtl文件路径
+		 mtlLoader.load('../moxing/1.mtl',function(materials){
+		 	materials.preload();
+       		 var objLoader = new THREE.OBJLoader();
+       		  objLoader.setMaterials( materials );//设置三维对象材质库
+      		  objLoader.setPath('moxing/');//设置obj文件所在
+      		  objLoader.load('../moxing/1.obj', function ( object ) {
+      		  		  object.position.y = 8;//位置坐标Y
+   					  object.position.z = 0;//位置坐标y
+					  object.scale.x=0.05;//缩放级别
+    				  object.scale.y=0.05;//缩放级别
+    				  object.scale.z=0.05;//缩放级别
+      		  	scene.add( object );
+      		  })
+       		 
+		 })
+			// grid
+//				var gridHelper = new THREE.GridHelper( 14, 28, 0x303030, 0x303030 );
+//				gridHelper.position.set( 0, - 0.04, 0 );
+//				scene.add( gridHelper );
+
+				// stats
+//				stats = new Stats();
+//				container.appendChild( stats.dom );
+
+				// model
+//				var manager = new THREE.LoadingManager();
+//				manager.onProgress = function( item, loaded, total ) {
+//
+////					console.log( item, loaded, total );
+//
+//				};
+
+//				var onProgress = function( xhr ) {
+//
+//					if ( xhr.lengthComputable ) {
+//
+//						var percentComplete = xhr.loaded / xhr.total * 100;
+////						console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
+//
+//					}
+//
+//				};
+
+//				var onError = function( xhr ) {
+//				};
+//				var loader = new THREE.OBJLoader( manager );
+//				loader.load( 'moxing/shidishixiang.obj', function( object ) {
+//
+//					object.traverse( function( child ) {
+//
+////						if ( child instanceof THREE.Mesh ) {
+////
+////							// pass
+////
+////						}
+//
+////						if ( child instanceof THREE.SkinnedMesh ) {
+////
+////							if ( child.geometry.animations !== undefined || child.geometry.morphAnimations !== undefined ) {
+////
+////								child.mixer = new THREE.AnimationMixer( child );
+////								mixers.push( child.mixer );
+////
+////								var action = child.mixer.clipAction( child.geometry.animations[ 0 ] );
+////								action.play();
+////
+////							}
+////
+////						}
+//						object.position.y = 8;//位置坐标Y
+////     					 object.position.z = 0;//位置坐标y
+//						  object.scale.x=0.05;//缩放级别
+//      				  object.scale.y=0.05;//缩放级别
+//      				  object.scale.z=0.05;//缩放级别
+//
+//					} );
+//
+//					scene.add( object );
+//
+//
+//				} );
+//
+//
+
+///ddjlkdjdlkjdl
+				renderer = new THREE.WebGLRenderer({ alpha:true});
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( canvasWidth, canvasHeight );
+//				renderer.setClearColor(scene.fog.color);
+				container.appendChild( renderer.domElement );
+
+				// controls, camera
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+//				 controls.enabled = false;//禁用控制器
+				controls.target.set( 0, 12, 0 );
+				camera.position.set( 4, 18, 28 );
+				controls.update();
+
+//				window.addEventListener( 'resize', onWindowResize, false );
+
+				light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
+				light.position.set(0, 0.5, 0);
+				scene.add(light);
+
+				light = new THREE.DirectionalLight(0xffffff, 1.0);
+				light.position.set(0, 0.5, 0);
+				scene.add(light);
+
+				animate();
+
+			}
+
+//			function onWindowResize() {
+//
+//				camera.aspect = canvasWidth / canvasHeight;
+//				camera.updateProjectionMatrix();
+//
+//				renderer.setSize( canvasWidth, canvasHeight );
+//
+//			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+//				if ( mixers.length > 0 ) {
+//
+//					for ( var i = 0; i < mixers.length; i ++ ) {
+//
+//						mixers[ i ].update( clock.getDelta() );
+//
+//					}
+//
+//				}
+
+//				stats.update();
+
+				render();
+
+			}
+
+			function render() {
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+
+</html>
